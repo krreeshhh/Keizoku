@@ -79,12 +79,6 @@ Keizoku/
 │
 ├── codebase_docs/                  # Architectural, technical, non-technical, and file documentation
 │
-├── docs/                           # Documentation media, badges, multi-language readmes, screenshots
-│   ├── badges/                     # App store and release platform badges (F-Droid, GitHub, Obtainium)
-│   ├── crypto/                     # SVG donation vectors (Bitcoin, Ethereum, Monero, Solana)
-│   ├── readme/                     # Localized README documentation (README.es.md, it, zh)
-│   └── screenshots/                # Application marketing mockups and UI promotional captures
-│
 ├── fastlane/                       # Continuous deployment and Google Play Store metadata
 │   └── metadata/android/           # Play Store localized titles, descriptions, changelogs, screenshots
 │
@@ -166,7 +160,7 @@ The root repository contains build manifests, dependency resolutions, static ana
 - **Exact Purpose**: The repository front page providing project introduction, showcase imagery, philosophy, installation methods, and feature index.
 - **Primary Elements**: Badges (F-Droid, GitHub Releases, Obtainium, license, Flutter version), high-resolution UI screenshots, detailed list of capabilities (offline logging, 400+ exercises with ASCII art/media, 1RM calculators, plate math, custom routines, Wear OS app, privacy policy, Firebase social sync and routine sharing), building instructions, and cryptocurrency support addresses.
 - **Key Responsibilities**: Acts as the primary landing page for developers and end-users discovering the project on GitHub.
-- **Invariants & Interactions**: Kept in sync with localized variants under `docs/readme/`.
+- **Invariants & Interactions**: Maintained as clean plain markdown without embedded promotional images.
 
 ### `TRANSLATING.md`
 - **Path**: `TRANSLATING.md`
@@ -2011,9 +2005,8 @@ Keizoku maintains an exhaustive test suite consisting of 68 test files covering 
 - **`assets/img/`**: Application graphics `runner.png` and default banner `banner_default.jpg`.
 - **`assets/shaders/`**: `edge_fade.frag` GLSL fragment shader compiled for hardware-accelerated scroll edge blurring.
 
-### Store Metadata & Documentation (`fastlane/`, `docs/`)
+### Store Metadata (`fastlane/`)
 - **`fastlane/metadata/android/`**: Localized Google Play Store descriptions, titles, short descriptions, and changelogs across 17 languages.
-- **`docs/`**: Platform release badges (`docs/badges/`), cryptocurrency donation QR vectors (`docs/crypto/`), localized README files (`docs/readme/`), and high-resolution promotional screenshots (`docs/screenshots/`).
 
 ---
 

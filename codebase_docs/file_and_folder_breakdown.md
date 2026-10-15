@@ -211,7 +211,7 @@ The root repository contains build manifests, dependency resolutions, static ana
 - **Path**: `pubspec.yaml`
 - **Exact Purpose**: Project definition, environment constraints, third-party dependency declarations, and asset bundle registrations.
 - **Primary Elements**:
-  - App metadata: `name: keizoku`, `version: 1.4.0+5`, `sdk: ^3.11.5`.
+  - App metadata: `name: keizoku`, `version: 1.0.0+1`, `sdk: ^3.11.5`.
   - Core dependencies: `audioplayers: ^6.1.1`, `cupertino_icons: ^1.0.8`, `file_picker: ^8.1.7`, `flutter_local_notifications: ^18.0.1`, `home_widget: ^0.7.0`, `image_picker: ^1.1.2`, `intl: ^0.20.2`, `path_drawing: ^1.0.1`, `path_provider: ^2.1.5`, `phosphoricons_flutter: ^1.2.0`, `share_plus: ^10.1.4`, `shared_preferences: ^2.5.2`, `timezone: ^0.10.0`, `url_launcher: ^6.3.1`, `video_player: ^2.9.2`, `archive: ^4.0.2`, `app_settings: ^5.1.1`, `dynamic_color: ^1.7.0`, `firebase_core: ^3.12.0`, `firebase_auth: ^5.5.0`, `cloud_firestore: ^5.6.4`.
   - Dev dependencies: `flutter_test`, `flutter_lints: ^5.0.0`.
   - Asset directories: `assets/art/`, `assets/audio/`, `assets/fonts/`, `assets/icon/`, `assets/img/`, `assets/shaders/`.
@@ -1151,7 +1151,7 @@ The `lib/screens/` directory contains 28 top-level screen views, full-screen edi
 - **Exact Purpose**: Application metadata, version details, open-source licenses, and cryptocurrency support showcase (251 lines).
 - **Primary Classes**: `AboutScreen`, `_AboutScreenState`.
 - **Key Responsibilities**:
-  - Displays version string (`1.4.0+5`), release channel, and GPLv3 license information.
+  - Displays version string (`1.0.0+1`), release channel, and GPLv3 license information.
   - Links to GitHub repository, bug tracker, Crowdin translation platform, and GPLv3 full text.
   - Shows cryptocurrency donation cards (Bitcoin, Ethereum, Monero, Solana) with copyable addresses and QR codes.
 

@@ -2,7 +2,7 @@
 
 > **Target Application:** Keizoku  
 > **Package Identifier:** `com.keizoku.app` (`keizoku`)  
-> **Version:** `1.4.0+5`  
+> **Version:** `1.0.0+1`  
 > **Language & Framework:** Dart `^3.11.5` / Flutter SDK (Material 3)  
 > **Platforms:** Android (Mobile API 21–36 & Wear OS Standalone), iOS  
 > **Cloud Backend:** Firebase (Cloud Firestore & Anonymous Authentication)  

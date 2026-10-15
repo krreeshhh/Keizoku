@@ -20,7 +20,7 @@ Keizoku operates on a **Privacy-First Hybrid Architecture**: it combines zero-la
 
 - **App Name:** Keizoku (継続 — Japanese for continuity/perseverance)
 - **Application ID:** `com.keizoku.app` (`keizoku`)
-- **Version:** `1.4.0+5`
+- **Version:** `1.0.0+1`
 - **Language / Framework:** Dart `^3.11.5` / Flutter SDK (Material 3)
 - **Cloud Backend:** Firebase (Firebase Auth Anonymous, Cloud Firestore with offline cache)
 - **Local Storage:** Atomic JSON persistence (`Store.instance`), Media store (`MediaStore`), Pure Dart SQLite B-Tree parser (`sqlite_reader.dart`)

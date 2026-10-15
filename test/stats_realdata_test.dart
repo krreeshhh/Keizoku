@@ -1,0 +1,142 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:keizoku/l10n/l10n.dart';
+import 'package:keizoku/services/local_store.dart';
+import 'package:keizoku/state/fit_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+String _slideToToday(String text) {
+  final data = jsonDecode(text) as Map<String, dynamic>;
+  final sessions = (data['sessions'] as List).cast<Map<String, dynamic>>();
+  final newest = sessions
+      .map((s) => DateTime.parse(s['d'] as String))
+      .reduce((a, b) => a.isAfter(b) ? a : b);
+  final target = DateTime.now().subtract(const Duration(days: 1));
+  final shift = Duration(days: target.difference(newest).inDays);
+
+  String slide(String iso) => DateTime.parse(iso).add(shift).toIso8601String();
+
+  for (final s in sessions) {
+    s['d'] = slide(s['d'] as String);
+  }
+  for (final b in (data['bodyweight'] as List).cast<Map<String, dynamic>>()) {
+    b['d'] = slide(b['d'] as String);
+  }
+  ((data['exNotes'] as Map?) ?? {}).forEach((_, v) {
+    for (final n in (v as List).cast<Map<String, dynamic>>()) {
+      n['d'] = slide(n['d'] as String);
+    }
+  });
+  return jsonEncode(data);
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  final fixture = File('test/fixtures/seed_backup.json');
+  if (!fixture.existsSync()) {
+    test('sin fixture', () {}, skip: 'test/fixtures no se publica');
+    return;
+  }
+
+  late Map<String, dynamic> raw;
+
+
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    await Store.instance.init();
+    final text = _slideToToday(fixture.readAsStringSync());
+    raw = jsonDecode(text) as Map<String, dynamic>;
+    expect(fit.importJson(text), true, reason: 'el backup de prueba debe ser válido');
+  });
+
+  tearDown(() {
+    fit.resetAllData();
+    setAppLanguage('en');
+  });
+
+  test('the whole backup lands', () {
+    expect(fit.sessions.length, 29);
+    expect(fit.profile.name, (raw['profile'] as Map)['name']);
+    expect(fit.bodyweight.length, 8);
+    expect(fit.routines.single.name, 'Empuje');
+    expect(fit.favorites.length, 2);
+    expect(fit.notesFor('EIeI8Vf').single.text, 'Subir a 82.5 la próxima.');
+    expect(fit.language, 'es', reason: 'el idioma del backup manda');
+  });
+
+
+  test('personal records are the best set ever, not the last one', () {
+    final prs = {for (final p in fit.personalRecords) p.name: p};
+
+    expect(prs['Barbell Deadlift']!.best, 120);
+    expect(prs['Barbell Deadlift']!.oneRm, closeTo(152, 1));
+    expect(prs['Barbell Full Squat']!.best, 110);
+    expect(prs['Barbell Bench Press']!.best, 77.5);
+    expect(prs['Barbell Curl']!.best, 32.5);
+
+    expect(fit.personalRecords.first.name, 'Barbell Deadlift');
+  });
+
+  test('the strength curve rises with the programme', () {
+    final series = fit.oneRmSeries('EIeI8Vf');
+    expect(series.length, greaterThan(5));
+    expect(series.last, greaterThan(series.first), reason: 'la progresión debe verse');
+    expect(series.last, closeTo(98, 1));
+  });
+
+  test('the heatmap only lights up the days that were trained', () {
+    final levels = fit.heatmapLevels;
+    expect(levels.length, kHeatmapDays);
+    final trained = levels.where((l) => l > 0).length;
+
+    expect(trained, greaterThan(15));
+    expect(trained, lessThanOrEqualTo(29));
+    expect(levels.every((l) => l >= 0 && l <= heatLevels), true);
+  });
+
+  test('the muscle split adds up to roughly 100%', () {
+    final split = fit.muscleSplit;
+    expect(split, isNotEmpty);
+    final total = split.fold(0, (a, e) => a + e.pct);
+    expect(total, closeTo(100, 2), reason: 'margen por redondeo a enteros');
+    expect(split.first.pct, greaterThanOrEqualTo(split.last.pct), reason: 'de mayor a menor');
+  });
+
+  test('bodyweight reads newest-first and the profile agrees', () {
+    expect(fit.latestBodyweight!.kg, closeTo(75.2, 0.01));
+    expect(fit.bodyweightHistory.first.kg, closeTo(75.2, 0.01));
+    expect(fit.bodyweightSeries.first, greaterThan(fit.bodyweightSeries.last),
+        reason: 'bajó de 78 a 75.2');
+  });
+
+  test('a day sheet shows what was really done that day', () {
+    final day = fit.sessions.map((s) => s.date).reduce((a, b) => a.isAfter(b) ? a : b);
+    final s = fit.daySummary(day)!;
+    expect(s.exercises, 2);
+    expect(s.sets, 6);
+    expect(s.names.length, 2);
+  });
+
+  test('the CSV carries every single set', () {
+    final rows = fit.exportCsv().trim().split('\n');
+    final sets = fit.sessions.fold(0, (a, s) => a + s.setCount);
+    expect(rows.length, sets + 1, reason: 'una fila por serie, más la cabecera');
+    expect(rows.first, startsWith('date,exercise'));
+  });
+
+  test('switching to pounds converts the display but not the data', () {
+    fit.setUnits('lb');
+    expect(fit.weightLabel(100), '${decimalText('220.5')} lb');
+    fit.setUnits('kg');
+  });
+
+  test('a re-export round-trips without losing a single session', () {
+    final again = fit.exportJson();
+    fit.sessions.clear();
+    expect(fit.importJson(again), true);
+    expect(fit.sessions.length, (raw['sessions'] as List).length);
+  });
+}

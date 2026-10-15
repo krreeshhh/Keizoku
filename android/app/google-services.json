@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "171443563500",
+    "project_id": "gym-application-f3fe4",
+    "storage_bucket": "gym-application-f3fe4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171443563500:android:e85e75598f1c592015eec9",
+        "android_client_info": {
+          "package_name": "com.keizoku.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB41ALLHwavZdF_gjpu4Bx2WR0ubqS27XI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
